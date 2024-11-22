@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import json
 import matplotlib.cm as cm
 import random
+import matplotlib.patheffects as patheffects
 
 pi = np.pi
 sin = np.sin
@@ -45,6 +46,7 @@ loaded_data_arrays = {k: np.array(v) for k, v in loaded_data.items()}
 
 # Create the plot
 fig, ax = plt.subplots(figsize=(20, 12))
+# Enable LaTeX font rendering in Matplotlib
 plt.rcParams.update({
     'text.usetex': True,             # Use LaTeX for all text rendering
     'font.family': 'serif',          # Set the font family to serif
@@ -61,17 +63,20 @@ colorbar = plt.colorbar(contour)
 # Reducing the number of grid lines (ticks) on the colorbar
 colorbar.set_ticks([0, 1.5, 3, 4.5])  # Set fewer tick positions
 colorbar.ax.tick_params(labelsize=28)  # Change tick label size
+# Iterate over each tick label on the colorbar axis and apply path effects for a bolder look
+for tick_label in colorbar.ax.get_yticklabels():
+    tick_label.set_path_effects([patheffects.withStroke(linewidth=1.25, foreground='black')])
 
 
 
 
 
 # Labels with LaTeX-style rendering
-plt.xlabel('$\mathit{w_1}$', fontsize=46)  # LaTeX with italic formatting for w_1
-plt.ylabel('$\mathit{w_2}$', fontsize=46)  # LaTeX with italic formatting for w_2
+plt.xlabel('$w_1$', fontsize=50, path_effects=[patheffects.withStroke(linewidth=1.25, foreground='black')])  # LaTeX with italic formatting for w_1
+plt.ylabel('$w_2$', fontsize=50, path_effects=[patheffects.withStroke(linewidth=1.25, foreground='black')])  # LaTeX with italic formatting for w_2
 
-plt.xticks(fontsize=28)
-plt.yticks(fontsize=28)
+plt.xticks(fontsize=32, path_effects=[patheffects.withStroke(linewidth=1.25, foreground='black')])
+plt.yticks(fontsize=32, path_effects=[patheffects.withStroke(linewidth=1.25, foreground='black')])
 # plt.title('Contour plot of MSE with 6 inputs and 2 weights.  ')
 # plt.figtext(0.5, 0.01,
 #             'y_target(t) = 2 * sin(t).  '
@@ -95,7 +100,7 @@ for i, (key, value) in enumerate(loaded_data_arrays.items()):
     print(marker)
     if marker == 'o':
         if not label_added:
-            ax.scatter(weight1, weight2, color=colors[1], marker=marker, s=200, label='Classical')
+            ax.scatter(weight1, weight2, color=colors[1], marker=marker, s=200, label=r'$\textbf{Classical}$')
             label_added = True
         else:
             ax.scatter(weight1, weight2, color=colors[1], marker=marker, s=200)  # No label for subsequent points
@@ -104,15 +109,21 @@ for i, (key, value) in enumerate(loaded_data_arrays.items()):
 
     
 
-# Optionally, add a legend to indicate which color corresponds to which key
-ax.scatter(1, 1, color='y', marker='*', s=400, label=f'Quantum')
 
-plt.legend(bbox_to_anchor=(0.5, 1.10),  # Positioning the legend above the plot
+# Optionally, add a legend to indicate which color corresponds to which key
+ax.scatter(1, 1, color='y', marker='*', s=1000, label=r'$\textbf{Quantum}$')
+
+
+plt.legend(
+    bbox_to_anchor=(0.5, 1.10),  # Positioning the legend above the plot
     loc='center',                # Center it horizontally
-    fontsize=36,                 # Set the font size
-    ncol=2,                      # Set the number of columns to 2
-    borderaxespad=0.
+    fontsize=46,                 # Set the font size
+    ncol=2,                      # Number of columns
+    borderaxespad=0.,            # Adjust padding
+    frameon=False,               # Disable the border
+    handletextpad=0.01            # Reduce spacing between marker and label
 )
+
 # Adjust the layout to prevent cutting off the legend
 plt.subplots_adjust(left=0.1, right=0.95, top=0.85, bottom=0.25)
 #plt.subplots_adjust(right=0.90)

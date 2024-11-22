@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import json
 import matplotlib.cm as cm
 import random
+import matplotlib.patheffects as patheffects
 
 pi = np.pi
 sin = np.sin
@@ -46,6 +47,11 @@ loaded_data_arrays = {k: np.array(v) for k, v in loaded_data.items()}
 # Ensure w1, w2, z, and loaded_data_arrays are defined
 
 fig, ax = plt.subplots(figsize=(20, 12))
+plt.rcParams.update({
+    'text.usetex': True,             # Use LaTeX for all text rendering
+    'font.family': 'serif',          # Set the font family to serif
+    'font.serif': ['Computer Modern'], # Explicitly use Computer Modern
+})
 levels = np.linspace(0, 12, 20)
 contour = ax.contourf(w1, w2, z, levels=levels, cmap='viridis')
 contour_lines = ax.contour(w1, w2, z, levels=levels, colors='black', linewidths=0.5)
@@ -55,12 +61,22 @@ colorbar = plt.colorbar(contour)
 # Reducing the number of grid lines (ticks) on the colorbar
 colorbar.set_ticks([0, 1.5, 3, 4.5, 6, 7.5, 9, 10.5, 12])  # Set fewer tick positions
 colorbar.ax.tick_params(labelsize=28)  # Change tick label size
+# Iterate over each tick label on the colorbar axis and apply path effects for a bolder look
+for tick_label in colorbar.ax.get_yticklabels():
+    tick_label.set_path_effects([patheffects.withStroke(linewidth=1.25, foreground='black')])
+
+
 
 # Labels and title
-plt.xlabel('$w_1$', fontsize=34)
-plt.ylabel('$w_2$', fontsize=34)
-plt.xticks(fontsize=28)
-plt.yticks(fontsize=28)
+plt.rcParams.update({
+    'text.usetex': True,             # Use LaTeX for all text rendering
+    'font.family': 'serif',          # Set the font family to serif
+    'font.serif': ['Computer Modern'], # Explicitly use Computer Modern
+})
+plt.xlabel('$w_1$', fontsize=50, path_effects=[patheffects.withStroke(linewidth=1.25, foreground='black')])
+plt.ylabel('$w_2$', fontsize=50, path_effects=[patheffects.withStroke(linewidth=1.25, foreground='black')])
+plt.xticks(fontsize=32, path_effects=[patheffects.withStroke(linewidth=1.25, foreground='black')])
+plt.yticks(fontsize=32, path_effects=[patheffects.withStroke(linewidth=1.25, foreground='black')])
 
 # Generating a colormap for the different keys (weights)
 colors = cm.rainbow(np.linspace(1, 0, 80))
@@ -77,16 +93,16 @@ for i, (key, value) in enumerate(loaded_data_arrays.items()):
     
     # Scatter with unique label only once
     if marker == 'o' and not label_added:
-        ax.scatter(weight1, weight2, color=colors[1], marker=marker, s=200, label='Classical')
+        ax.scatter(weight1, weight2, color=colors[1], marker=marker, s=200, label=r'$\textbf{Classical}$')
         label_added = True
     else:
         ax.scatter(weight1, weight2, color=colors[1], marker=marker, s=200)  # No label for subsequent points
 
 # Add a Quantum point marker
-ax.scatter(1, 1, color='y', marker='*', s=300, label='Quantum')
+ax.scatter(1, 1, color='y', marker='*', s=1000, label=r'$\textbf{Quantum}$')
 
 # Add a legend above the plot
-plt.legend(bbox_to_anchor=(0.5, 1.10), loc='center', fontsize=36, ncol=2, borderaxespad=0.)
+plt.legend(bbox_to_anchor=(0.5, 1.10), loc='center', fontsize=46, ncol=2, borderaxespad=0., frameon=False, handletextpad=0.01)
 
 # Adjust the layout to prevent cutting off the legend
 plt.subplots_adjust(left=0.1, right=0.95, top=0.85, bottom=0.25)
