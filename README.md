@@ -1,1 +1,0 @@
-# Quantum-Sine-NN
