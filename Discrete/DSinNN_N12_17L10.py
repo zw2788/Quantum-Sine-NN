@@ -120,8 +120,8 @@ class BinarizeSinParams(torch.autograd.Function):
     """
     @staticmethod
     def forward(ctx, input):
-        condition_greater = input > 1e-2
-        condition_less = input < -1e-2
+        condition_greater = input > 1e-1
+        condition_less = input < -1e-1
         result_tensor = torch.where(
             condition_greater, torch.tensor(1.),
             torch.where(condition_less, torch.tensor(-1.), torch.tensor(0.)))

@@ -120,8 +120,8 @@ class BinarizeSinParams(torch.autograd.Function):
     """
     @staticmethod
     def forward(ctx, input):
-        condition_greater = input > 1e-2
-        condition_less = input < -1e-2
+        condition_greater = input > 1e-1
+        condition_less = input < -1e-1
         result_tensor = torch.where(
             condition_greater, torch.tensor(1.),
             torch.where(condition_less, torch.tensor(-1.), torch.tensor(0.)))
@@ -670,7 +670,7 @@ with open('proportions_layerN23L10.txt', 'w') as f:
                 f"Test min: {entry['Min Test Loss']:.6f}, bad test propotion: {entry['Test Proportion Above Threshold']* 100:.4f}%, "
                 f"Good Train & Good Test: {entry['Good Train and Good Test']* 100:.6f}%\n")
         
-with open('all_train_test_loss.csvN23L10', 'w', newline='') as csvfile:
+with open('all_train_test_lossN23L10.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['num_neuron', 'num_hidden_layers', 'seed', 'train_loss', 'test_loss'])
     for record in all_loss_records:
